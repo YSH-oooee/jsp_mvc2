@@ -24,6 +24,8 @@ public class _01_Main extends HttpServlet {
 	
 	protected void reqPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// 로그인 상태에 따라 다른 메인 페이지가 출력 되어야하므로,
+		// 어딘가에서 session.setAttribute 되어있는 id값을 불러와 01_main.jsp로 전송
 		HttpSession session = request.getSession();
 		String id = (String)session.getAttribute("menuId");
 		

@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import _01_login.dto.MemberDTO;
@@ -89,7 +88,7 @@ public class MemberDAO {
 	public boolean loginMember(MemberDTO mdto) {
 		
 		boolean isLogin = false;
-		System.out.println(mdto.getId() + "/" + mdto.getPasswd());
+		
 		try {
 			
 			conn = getConnection();
