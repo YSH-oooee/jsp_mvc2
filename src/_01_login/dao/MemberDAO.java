@@ -44,7 +44,7 @@ public class MemberDAO {
 		
 	}
 	
-	//회원가입
+	// 1. 회원가입
 	public boolean joinMember(MemberDTO mdto) {
 		
 		boolean isJoin = false;
@@ -84,7 +84,7 @@ public class MemberDAO {
 		
 	}
 	
-	//로그인
+	// 2. 로그인
 	public boolean loginMember(MemberDTO mdto) {
 		
 		boolean isLogin = false;
@@ -114,5 +114,118 @@ public class MemberDAO {
 		return isLogin;
 		
 	}
+	
+	// 3. 회원정보 수정 DAO
+    public void updateMember(String id, MemberDTO mdto) {
+        
+    	try {
+    		
+            conn = getConnection();
+            //받아온 ID의 정보를 수정
+            pstmt = conn.prepareStatement("UPDATE MEMBER SET PASSWD=?, NAME=?, TEL=?, EMAIL=?, FIELD=?, SKILL=?, MAJOR=? WHERE ID=?");
+            pstmt.setString(1, mdto.getPasswd());
+            pstmt.setString(2, mdto.getName());
+            pstmt.setString(3, mdto.getTel());
+            pstmt.setString(4, mdto.getEmail());
+            pstmt.setString(5, mdto.getField());
+            pstmt.setString(6, mdto.getSkill());
+            pstmt.setString(7, mdto.getMajor());
+            pstmt.setString(8, id);
+            
+            pstmt.executeUpdate();
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+        	if(pstmt != null) {try {pstmt.close();} catch (SQLException e) {}}
+            if(conn != null)  {try {conn.close();} catch (SQLException e) {}}
+        }
+    }    
+    
+    // 4. 한명의 회원의 정보 조회 DAO
+    public MemberDTO getOneMemberInfo(String id) {
+        
+    	MemberDTO mdto = null;
+        
+    	try {
+    		
+            conn = getConnection();
+            //받아온 ID의 DB정보를 호출
+            pstmt = conn.prepareStatement("SELECT * FROM MEMBER WHERE ID=?");
+            pstmt.setString(1, id);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+            	
+            	mdto = new MemberDTO();
+            	
+            	mdto.setId(rs.getString("id"));
+            	mdto.setPasswd(rs.getString("passwd"));;
+            	mdto.setName(rs.getString("name"));
+            	mdto.setTel(rs.getString("tel"));
+            	mdto.setEmail(rs.getString("email"));
+            	mdto.setField(rs.getString("field"));
+            	mdto.setSkill(rs.getString("skill"));
+            	mdto.setMajor(rs.getString("major"));
+            	
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        	if(rs != null) 	  {try {rs.close();}    catch (SQLException e) {}}            
+        	if(pstmt != null) {try {pstmt.close();} catch (SQLException e) {}}
+            if(conn != null)  {try {conn.close();}  catch (SQLException e) {}}
+        }
+    	
+        return mdto;
+    
+    }    
+    
+    // 5. 회원 탈퇴 DAO
+    public void deleteMember(String id) {
+    	
+    	try {
+    		
+    		conn = getConnection();
+    		//해당 ID의 정보를 MEMBER 테이블에서 삭제
+    		pstmt = conn.prepareStatement("DELETE FROM MEMBER WHERE ID=?");
+    		pstmt.setString(1, id);
+    		
+    		pstmt.executeUpdate();
+    		
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	} finally {
+    		if (pstmt != null) {try {pstmt.close();} catch (SQLException e) {}}
+    		if (conn != null) {try {conn.close();} catch (SQLException e) {}}
+    	}
+    	
+    }    
+    
+    // 6. 입사지원 DAO
+    public void apply(String id, String field, String skill, String major) {
+ 
+        try {
+            
+            conn = getConnection();
+            //해당 ID의 지원분야, 기술, 전공 정보를 DB에 저장 = 입사지원
+            pstmt = conn.prepareStatement("UPDATE MEMBER SET FIELD=?, SKILL=?, MAJOR=? WHERE ID=?");
+            pstmt.setString(1, field);
+            pstmt.setString(2, skill);
+            pstmt.setString(3, major);
+            pstmt.setString(4, id);
+            
+            pstmt.executeUpdate();
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+        	if(pstmt != null) {try {pstmt.close();} catch (SQLException e) {}}
+            if(conn != null)  {try {conn.close();} catch (SQLException e) {}}
+        }
+        
+    }
 
 }

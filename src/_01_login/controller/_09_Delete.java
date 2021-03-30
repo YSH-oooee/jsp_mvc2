@@ -10,28 +10,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/main.do")
-public class _01_Main extends HttpServlet {
+import _01_login.dao.MemberDAO;
+
+@WebServlet("/delete.do")
+public class _09_Delete extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
-     
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		reqPro(request, response);
 	}
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		reqPro(request, response);
 	}
 	
-	protected void reqPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void reqPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// 로그인 상태에 따라 다른 메인 페이지가 출력 되어야하므로,
-		// 어딘가에서 session.setAttribute 되어있는 id값을 불러와 01_main.jsp로 전송
+		//로그인 되어있는 ID를 받아와서 회원탈퇴DAO로 보내어 DB에서 회원 정보 삭제
 		HttpSession session = request.getSession();
 		String id = (String)session.getAttribute("memId");
 		
-		request.setAttribute("id", id);
+		MemberDAO.getInstance().deleteMember(id);
 		
-		RequestDispatcher dis = request.getRequestDispatcher("_01_login/01_main.jsp");
+		//회원 삭제 후, 세션 초기화
+		session.invalidate();
+		
+		RequestDispatcher dis = request.getRequestDispatcher("_01_login/09_delete.jsp");
 		dis.forward(request, response);
 		
 	}
