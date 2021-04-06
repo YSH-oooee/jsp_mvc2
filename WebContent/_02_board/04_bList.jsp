@@ -26,7 +26,7 @@
 				<td>작성일</td>
 				<td>조회수</td>
 			</tr>
-			<c:forEach var="board" items="${boardList}"> 
+			<c:forEach var="board" items="${boardList}">
 				<c:set var="idx" value="${idx+1 }" />
 				<tr align="center">
 					<td><c:out value="${idx}"/></td>
